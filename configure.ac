@@ -2,10 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT([linear_algebra], [0.02])
+AC_INIT([Class3_6], [0.02])
 AM_INIT_AUTOMAKE([-Wall foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
-
+LDFLAGS="$LDFLAGS -L$HOME/Project1/Project1/FFTW/fftw-2.1.5/fftw"
+CPPFLAGS="$CPPFLAGS -I$HOME/Project1/Project1/FFTW/fftw-2.1.5/fftw"
 # Checks for programs.
 
 AC_PROG_CC_C99
@@ -14,15 +15,14 @@ if test -z "$CC" || test "$CC" = "no"; then
 fi
 AM_PROG_CC_C_O
 
-# add -Wall if possible
+# add -Wall and if possible
 AX_CHECK_COMPILER_FLAGS([-Wall], [CFLAGS="$CFLAGS -Wall"])
 
 # find flags for using OpenMP
 AC_OPENMP
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
 
-# link with the math library if needed
-AC_CHECK_LIB([m], [sin])
+
 
 # Check for debugging 
 AC_ARG_ENABLE(debug, 
@@ -36,29 +36,15 @@ AC_ARG_ENABLE(debug,
  
 AS_IF([test "$debug" = "false"], [CPPFLAGS="${CPPFLAGS} -DNDEBUG"]) 
 
-dnl F77 is the Fortran77 compiler (extension .f / .F)
-AC_PROG_F77
-if test -z "$F77" || test "X$F77" = "Xno"; then
-  AC_MSG_ERROR([No suitable F77 compiler found])
-fi
-
-AC_F77_WRAPPERS 
+dnl For Fortran support, uncomment (remove "dnl") the following
+dnl AC_PROG_F77
+dnl if test -z "$F77" || test "X$F77" = "Xno"; then
+dnl   AC_MSG_ERROR([No suitable F77 compiler found])
+dnl fi
 
 # for library support
 AC_PROG_RANLIB
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
-
-dnl FC is the Fortran90 compiler (extension .f90 / .F90)
-AC_PROG_FC([openmpif90 mpif90])
-if test -z "$FC" || test "X$FC" = "Xno"; then
-  AC_MSG_ERROR([No suitable Fortran90 compiler found])
-fi
-
-dnl doesn't work on fishercat :(
-dnl AC_LANG(Fortran)
-dnl AC_OPENMP
-dnl FCFLAGS="$FCFLAGS $OPENMP_FCFLAGS"
-FCFLAGS="$FCFLAGS -fopenmp"
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile])

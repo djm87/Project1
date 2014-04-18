@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <math.h>
-//#include <fftw.h>
+#include <fftw.h>
 #include "Project1.h"
 
 // ----------------------------------------------------------------------
@@ -43,7 +43,7 @@ main(int argc, char **argv)
    else
      VEC(k, i) = -(n/2-1)*dk+dk*i;
    
-   VEC(u,i) = 3*pow(a,2)*pow((1/cosh(0.5*a*VEC(x,i))),2); //checked and good... 
+   //VEC(u,i) = 3*pow(a,2)*pow((1/cosh(0.5*a*VEC(x,i))),2); //checked and good... 
    //printf("u(%2d) = %6.4f\t", i+1, VEC(u, i));
   }
  end = WTime();
