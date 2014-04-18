@@ -54,7 +54,7 @@ main(int argc, char **argv)
   //assert(x->n==y->n);
 
   // Solver RK4
-  beg WTime();
+  beg = WTime();
 //
   end = WTime();
   t_rk4 = end-beg;
