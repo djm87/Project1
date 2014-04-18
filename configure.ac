@@ -5,10 +5,11 @@ AC_PREREQ(2.61)
 AC_INIT([Class3_6], [0.02])
 AM_INIT_AUTOMAKE([-Wall foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+
 LDFLAGS="$LDFLAGS -L$HOME/Project1/Project1/FFTW/fftw-2.1.5/fftw"
 CPPFLAGS="$CPPFLAGS -I$HOME/Project1/Project1/FFTW/fftw-2.1.5/fftw"
-# Checks for programs.
 
+# Checks for programs.
 AC_PROG_CC_C99
 if test -z "$CC" || test "$CC" = "no"; then
   AC_MSG_ERROR([No suitable C99 compiler found])
@@ -22,7 +23,8 @@ AX_CHECK_COMPILER_FLAGS([-Wall], [CFLAGS="$CFLAGS -Wall"])
 AC_OPENMP
 CFLAGS="$CFLAGS $OPENMP_CFLAGS"
 
-
+#Check for math library
+AC_CHECK_LIB([m],[sin])
 
 # Check for debugging 
 AC_ARG_ENABLE(debug, 
