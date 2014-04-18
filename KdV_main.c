@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <math.h>
+//#include <fftw.h>
 #include "Project1.h"
 
 // ----------------------------------------------------------------------
@@ -11,13 +12,17 @@
 int
 main(int argc, char **argv)
 {
-  const int n = 100; // number of points
+  const int n = 512; // number of points
   const int tmax = 0.1, nprint = 25, a = 9, b = 16, c = 2;  
-  double beg,end,dt,dx,dk;
-  //int nmax; 
+  double beg,end,dt,dx,dk,t_init,t_rk4;
+  //fftw_complex in[n], out[n]
+  //fftw_plan p; 
   
+   
+  beg = WTime();
+
   dt = 0.1/pow(n,2); 
-  dx = 20/n*2-20/n;
+  dx = 20/n;
   dk = 2*pi/(n*dx);
   //nmax = round(tmax/dt); 
   //nplt = floor(tmax/nprint/dt);
@@ -31,40 +36,37 @@ main(int argc, char **argv)
 
   // initialize values 
  for (int i = 0; i < x->n; i++) {
-   VEC(x, i) = -10+20/n*i;
+   VEC(x, i) = -10+20.0/(n-1)*i; //checked and good... 
    
    if(i <= n/2) 
      VEC(k, i) = dk*i;
    else
      VEC(k, i) = -(n/2-1)*dk+dk*i;
    
-   VEC(u,i) = 3*pow(a,2)*pow((1/cosh(0.5*a*VEC(x,i))),2);
+   VEC(u,i) = 3*pow(a,2)*pow((1/cosh(0.5*a*VEC(x,i))),2); //checked and good... 
+   //printf("u(%2d) = %6.4f\t", i+1, VEC(u, i));
   }
-
-  // calculate scalar product and make sure it's correct
+ end = WTime();
+  t_init = end-beg; 
+  printf("Number of Points = %d\n", n);
+  //p = fftw_create_plan(n,FFTW_FORWARD,FFTW_ESTIMATE);
+  //fftw_one(p,in,out); 
   //assert(x->n==y->n);
 
-  beg =WTime();
-  //#pragma omp parallel for
-  //for (int i = 0; i < 10000; i++) {
-  //   Interp_mid_add(x,y,interval, N);
-  //}
+  // Solver RK4
+  beg WTime();
+//
   end = WTime();
+  t_rk4 = end-beg;
 
-  printf("Number of Points = %d\n", n);
-  //for (int i = 0; i < x-> n; i++) {
-    //printf("x(%2d) = %6.3f\t", i+1, VEC(x, i));
-    //printf("y(%2d) = %6.3f\n", i+1, VEC(y, i));
-   // fprintf(f, "%g %g\n", VEC(x, i), VEC(y, i));
-  //}
   fclose(f);
-  printf("Time = %.6f seconds\n", end-beg);
-  //printf("Use './gnuplot.bash' to plot to file, then use 'eog Example1_plot.png'\n");
+  printf("Time Initialize = %.6f seconds\n", t_init);
+  printf("Time RK4 = %.6f seconds\n", t_rk4);
 
   // clean up
   vector_destroy(x);
   vector_destroy(k);
   vector_destroy(u);
-   
+  //fftw_destroy_plan(p) 
   return 0;
 }
