@@ -6,7 +6,7 @@ AC_INIT([Class3_6], [0.02])
 AM_INIT_AUTOMAKE([-Wall foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-LDFLAGS="$LDFLAGS -L$HOME/Project1/Project1/FFTW/fftw-2.1.5/fftw"
+LDFLAGS="$LDFLAGS -LFFTW/fftw-2.1.5/fftw/.libs"
 CPPFLAGS="$CPPFLAGS -I$HOME/Project1/Project1/FFTW/fftw-2.1.5/fftw"
 
 # Checks for programs.
@@ -25,6 +25,8 @@ CFLAGS="$CFLAGS $OPENMP_CFLAGS"
 
 #Check for math library
 AC_CHECK_LIB([m],[sin])
+
+AC_CHECK_LIB([fftw],[fftw_create_plan])
 
 # Check for debugging 
 AC_ARG_ENABLE(debug, 
