@@ -5,10 +5,10 @@ AC_PREREQ(2.61)
 AC_INIT([Class3_6], [0.02])
 AM_INIT_AUTOMAKE([-Wall foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
-
+LDFLAGS="$LDFLAGS -LFFTW/fftw-2.1.5/rfftw/.libs"
 LDFLAGS="$LDFLAGS -LFFTW/fftw-2.1.5/fftw/.libs"
-CPPFLAGS="$CPPFLAGS -I$HOME/Project1/Project1/FFTW/fftw-2.1.5/fftw"
-
+CPPFLAGS="$CPPFLAGS  -I$HOME/Project1/Project1/FFTW/fftw-2.1.5/rfftw"
+CPPFLAGS="$CPPFLAGS  -I$HOME/Project1/Project1/FFTW/fftw-2.1.5/fftw"
 # Checks for programs.
 AC_PROG_CC_C99
 if test -z "$CC" || test "$CC" = "no"; then
@@ -26,8 +26,8 @@ CFLAGS="$CFLAGS $OPENMP_CFLAGS"
 #Check for math library
 AC_CHECK_LIB([m],[sin])
 
-AC_CHECK_LIB([fftw],[fftw_create_plan])
-
+AC_CHECK_LIB([fftw],[fftw_one])
+AC_CHECK_LIB([rfftw],[rfftw_one])
 # Check for debugging 
 AC_ARG_ENABLE(debug, 
   AS_HELP_STRING([--disable-debug], [Turn off debugging]), 
