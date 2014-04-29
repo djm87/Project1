@@ -108,11 +108,11 @@ for (int i = 0; i<1 ; i++) { //nmax; i++) {
       in[j].re = E[j].re*(U[j].re+aa[j].re/2) - E[j].im*(U[j].im+aa[j].im/2) ;
       in[j].im = E[j].re*(U[j].im+aa[j].im/2)  + E[j].im*(U[j].re+aa[j].re/2) ; // checked and good...
       }   
-
+  
       fftw_one(plan_backward, in, out2);
      
       for (int j = 0; j < x->n; j++) {
-      in[j].re = (out2[j].re/n)*(out2[j].re/n);
+      in[j].re = (out2[j].re/n)*(out2[j].re/n); 
       in[j].im = 0.0; // checked and good...
       }
 
@@ -121,6 +121,9 @@ for (int i = 0; i<1 ; i++) { //nmax; i++) {
       bb[j].re = -g[j].im*out[j].im;
       bb[j].im = g[j].im*out[j].re;
       }
+
+      // c
+      
   }
  for (int i = 0; i < x->n; i++) {
 printf("i = %3d aa= %12.4g %12.4g \n",i, bb[i].re ,bb[i].im);
