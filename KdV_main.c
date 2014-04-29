@@ -55,7 +55,7 @@ main(int argc, char **argv)
     if(i <= n/2){
       VEC(k, i) = dk*i;}
     else
-      VEC(k, i) = -(n/2-1)*dk+(i-n/2)*dk;
+      VEC(k, i) = -(n/2-1)*dk+(i-1-n/2)*dk;
 
     VEC(u,i) = 3*pow(a,2)*pow((1/cosh(0.5*a*VEC(x,i))),2); //checked and good... 
  
@@ -81,32 +81,31 @@ main(int argc, char **argv)
 for (int i = 0; i<1 ; i++) { //nmax; i++) { 
     t=i*dt;
     
-     for (int j =0; j<n; j++) { 
+     for (int j = 0; j < x->n; j++)  { 
         g[j].im=-0.5*dt*VEC(k,j); //checked and good...
        E[j].re= cos(dt*ik3[j].im/2);
        E[j].im= sin(dt*ik3[j].im/2);
 
        E2[j].re = E[j].re*E[j].re-E[j].im*E[j].im;
-       E2[j].im = 2*E[j].re*E[j].im; //check and good...
+       E2[j].im = 2*E[j].re*E[j].im; //checked and good...
      } 
      
      fftw_one(plan_backward, out, out2);
      
       for (int j = 0; j < x->n; j++) {
-      //in[j].re = out2[j].re*out2[j].re;
-      //in[j].im = 0.0;
- }
-     
-    //rfftw_one( plan_c_to_r,outr,inr );
-    //fftw_one(plan_forward, in, out);
+      in[j].re = (out2[j].re/n)*(out2[j].re/n);
+      in[j].im = 0.0; // checked and good...
+      }
+
+     fftw_one(plan_forward, in, out);
      for (int j = 0; j < x->n; j++) {
-     //aa[j].im = g[j].im*out[j].im;
-     //aa[j].re = g[j].im*out[j].re;
+     aa[j].re = g[j].im*out[j].im;
+     aa[j].im = g[j].im*out[j].re;
      }
 
   }
  for (int i = 0; i < x->n; i++) {
-printf("i = %3d aa= %12g %12g \n",i, out2[i].re/n,out2[i].im/n);
+printf("i = %3d aa= %12g %12.4f \n",i, aa[i].im,aa[i].re);
  }
   end = WTime();
   t_rk4 = end-beg;
