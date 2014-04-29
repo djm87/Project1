@@ -20,7 +20,7 @@ main(int argc, char **argv)
   int nmax,nplt; 
   const double tmax = 0.01;
   double beg,end,dt,dx,dk,t_init,t_rk4,t; 
-  fftw_complex in[n], out[n], in2[n], out2[n],ik3[n],g[n],E[n],E2[n],aa[n];
+  fftw_complex in[n], U[n], in2[n], out[n],out2[n],ik3[n],g[n],E[n],E2[n],aa[n],bb[n],cc[n],dd[n];
   fftw_real  inr[n], outr[n], inr2[n], outr2[n];
 
   fftw_plan plan_forward; 
@@ -68,7 +68,7 @@ main(int argc, char **argv)
 
   }
 
- fftw_one(plan_forward, in, out);
+ fftw_one(plan_forward, in, U);
 
   end = WTime();
   t_init = end-beg; 
@@ -89,23 +89,41 @@ for (int i = 0; i<1 ; i++) { //nmax; i++) {
        E2[j].re = E[j].re*E[j].re-E[j].im*E[j].im;
        E2[j].im = 2*E[j].re*E[j].im; //checked and good...
      } 
+     // a
+     fftw_one(plan_backward, U, out);
      
-     fftw_one(plan_backward, out, out2);
+      for (int j = 0; j < x->n; j++) {
+      in[j].re = (out[j].re/n)*(out[j].re/n);
+      in[j].im = 0.0; // checked and good...
+      }
+
+     fftw_one(plan_forward, in, out);
+     for (int j = 0; j < x->n; j++) {
+     aa[j].re = -g[j].im*out[j].im;
+     aa[j].im = g[j].im*out[j].re;
+     }
+     
+     // b
+      for (int j = 0; j < x->n; j++) {
+      in[j].re = E[j].re*(U[j].re+aa[j].re/2) - E[j].im*(U[j].im+aa[j].im/2) ;
+      in[j].im = E[j].re*(U[j].im+aa[j].im/2)  + E[j].im*(U[j].re+aa[j].re/2) ; // checked and good...
+      }   
+
+      fftw_one(plan_backward, in, out2);
      
       for (int j = 0; j < x->n; j++) {
       in[j].re = (out2[j].re/n)*(out2[j].re/n);
       in[j].im = 0.0; // checked and good...
       }
 
-     fftw_one(plan_forward, in, out);
-     for (int j = 0; j < x->n; j++) {
-     aa[j].re = g[j].im*out[j].im;
-     aa[j].im = g[j].im*out[j].re;
-     }
-
+      fftw_one(plan_forward, in, out);
+      for (int j = 0; j < x->n; j++) {
+      bb[j].re = -g[j].im*out[j].im;
+      bb[j].im = g[j].im*out[j].re;
+      }
   }
  for (int i = 0; i < x->n; i++) {
-printf("i = %3d aa= %12g %12.4f \n",i, aa[i].im,aa[i].re);
+printf("i = %3d aa= %12.4g %12.4g \n",i, bb[i].re ,bb[i].im);
  }
   end = WTime();
   t_rk4 = end-beg;
