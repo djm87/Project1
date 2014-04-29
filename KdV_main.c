@@ -20,8 +20,8 @@ main(int argc, char **argv)
   int nmax,nplt; 
   const double tmax = 0.01;
   double beg,end,dt,dx,dk,t_init,t_rk4,t; 
-  fftw_complex in[n], out[n], in2[n], ik3[n],g[n],E[n],E2[n];
-  fftw_real  inr[n], outr[n], inr2[n];
+  fftw_complex in[n], out[n], in2[n], out2[n],ik3[n],g[n],E[n],E2[n],aa[n];
+  fftw_real  inr[n], outr[n], inr2[n], outr2[n];
 
   fftw_plan plan_forward; 
   fftw_plan plan_backward;
@@ -60,24 +60,25 @@ main(int argc, char **argv)
     VEC(u,i) = 3*pow(a,2)*pow((1/cosh(0.5*a*VEC(x,i))),2); //checked and good... 
  
     in[i].re = VEC(u,i);
-    in[i].im = 0.0; 
+    in[i].im = 0.0;
+    inr[i] = VEC(u,i); 
 
     ik3[i].im = pow(VEC(k,i),3); // checked and good...
   
 
   }
 
+ fftw_one(plan_forward, in, out);
+
   end = WTime();
   t_init = end-beg; 
 
-  fftw_one( plan_forward,in,out );
-
-
+ 
   // Solver RK4
   beg = WTime();
 //printf("n=%d\n",nmax);
 
-for (int i = 0; i< nmax; i++) { 
+for (int i = 0; i<1 ; i++) { //nmax; i++) { 
     t=i*dt;
     
      for (int j =0; j<n; j++) { 
@@ -89,13 +90,23 @@ for (int i = 0; i< nmax; i++) {
        E2[j].im = 2*E[j].re*E[j].im; //check and good...
      } 
      
-     rfftw_one( plan_backward,in,in2 );
-     fftw_one( plan_forward,,out );
-     a = g.im*
+     fftw_one(plan_backward, out, out2);
+     
+      for (int j = 0; j < x->n; j++) {
+      //in[j].re = out2[j].re*out2[j].re;
+      //in[j].im = 0.0;
+ }
+     
+    //rfftw_one( plan_c_to_r,outr,inr );
+    //fftw_one(plan_forward, in, out);
+     for (int j = 0; j < x->n; j++) {
+     //aa[j].im = g[j].im*out[j].im;
+     //aa[j].re = g[j].im*out[j].re;
+     }
 
   }
-         for (int i = 0; i < x->n; i++) {
-printf("i = %3d out= %12g, %12g  \n",i,E2[i].re,E2[i].im);
+ for (int i = 0; i < x->n; i++) {
+printf("i = %3d aa= %12g %12g \n",i, out2[i].re/n,out2[i].im/n);
  }
   end = WTime();
   t_rk4 = end-beg;
