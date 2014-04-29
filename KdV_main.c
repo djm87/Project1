@@ -123,10 +123,59 @@ for (int i = 0; i<1 ; i++) { //nmax; i++) {
       }
 
       // c
+      for (int j = 0; j < x->n; j++) {
+      in[j].re = E[j].re*U[j].re - E[j].im*U[j].im+bb[j].re/2 ;
+      in[j].im = E[j].re*U[j].im + E[j].im*U[j].re+bb[j].im/2 ; // checked and good...
+      }   
+  
+      fftw_one(plan_backward, in, out2);
+     
+      for (int j = 0; j < x->n; j++) {
+      in[j].re = (out2[j].re/n)*(out2[j].re/n); 
+      in[j].im = 0.0; // checked and good...
+      }
+
+      fftw_one(plan_forward, in, out);
+      for (int j = 0; j < x->n; j++) {
+      cc[j].re = -g[j].im*out[j].im;
+      cc[j].im = g[j].im*out[j].re;
+      }  
+    
+      // d 
+      for (int j = 0; j < x->n; j++) {
+      in[j].re = E2[j].re*U[j].re - E2[j].im*U[j].im + E[j].re*cc[j].re - E[j].im*cc[j].im;
+      in[j].im = E2[j].re*U[j].im + E2[j].im*U[j].re + E[j].re*cc[j].im + E[j].im*cc[j].re ; // checked and good...
+      }   
+  
+      fftw_one(plan_backward, in, out2);
+     
+      for (int j = 0; j < x->n; j++) {
+      in[j].re = (out2[j].re/n)*(out2[j].re/n); 
+      in[j].im = 0.0; // checked and good...
+      }
+
+      fftw_one(plan_forward, in, out);
+      for (int j = 0; j < x->n; j++) {
+      dd[j].re = -g[j].im*out[j].im;
+      dd[j].im = g[j].im*out[j].re;
+      }  
+      
+      // Compute U 
+      for (int j = 0; j < x->n; j++) {
+      U[j].re = E2[j].re*U[j].re - E2[j].im*U[j].im + 
+               (E2[j].re*aa[j].re - E2[j].im*aa[j].im +
+                2*(E[j].re*(bb[j].re+cc[j].re) - E[j].im*(bb[j].im+cc[j].im))  +
+                dd[j].re)/6; 
+        
+      U[j].im = E2[j].re*U[j].im + E2[j].im*U[j].re + 
+               (E2[j].re*aa[j].im + E2[j].im*aa[j].re + 
+                2*(E[j].re*(bb[j].im+cc[j].im) + E2[j].im*(bb[j].re+cc[j].re)) +
+                dd[j].im)/6;
+      }  
       
   }
  for (int i = 0; i < x->n; i++) {
-printf("i = %3d aa= %12.4g %12.4g \n",i, bb[i].re ,bb[i].im);
+    printf("i = %3d aa= %12.4g %12.4g \n",i, U[i].re ,U[i].im);
  }
   end = WTime();
   t_rk4 = end-beg;
