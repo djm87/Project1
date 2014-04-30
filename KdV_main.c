@@ -20,7 +20,7 @@ main(int argc, char **argv)
   const int n = 512; // number of points
   const int  a = 9;// b = 16, c = 2;  
   int imax,iplt,sprint; 
-  double beg,end,dt,dx,dk,t,t_cpu[3],total_t, plotu[n*nprint][3] ; 
+  double beg,end,dt,dx,dk,t,t_cpu[3],total_t, plotu[n*(nprint)][3] ; 
   fftw_complex in[n], U[n], out[n],out2[n],
                ik3[n],g[n],E[n],E2[n],aa[n],bb[n],cc[n],dd[n];
 
@@ -31,6 +31,7 @@ main(int argc, char **argv)
 
   dt = 0.1/(double)pow(n,2); 
   dx = 20/((double)n-1);
+
   dk = 2*PI/(dx*(double)n);
   imax = round(tmax/dt);
   iplt = floor(tmax/nprint/dt);
@@ -73,7 +74,7 @@ main(int argc, char **argv)
   beg = WTime();
 //printf("n=%d\n",nmax);
 
-for (int i = 0; i<imax ; i++) { //nmax; i++) { 
+for (int i = 1; i<=imax ; i++) { //nmax; i++) { 
     t=i*dt;
     
      for (int j = 0; j < x->n; j++)  { 
@@ -166,31 +167,41 @@ for (int i = 0; i<imax ; i++) { //nmax; i++) {
                (E2[j].re*aa[j].im + E2[j].im*aa[j].re + 
                 2*(E[j].re*(bb[j].im+cc[j].im) + E2[j].im*(bb[j].re+cc[j].re)) +
                 dd[j].im)/6;
+      in[j].re = U[j].re;
+      in[j].im = U[j].im;
       }  
       // Store data to print to file
       if(fmod(i,iplt) == 0){
-         fftw_one(plan_backward, U, out);
-	     
+        fftw_one(plan_backward, in, out);
+	//          for (int j = 0; j < x->n; j++) {
+   // printf("i = %3d aa= %12.5f %12.5f \n",j, U[j].re/n ,U[j].im/n);
+    //  } 
+    //   printf("t = %f\n",t); 
+ //getchar();
          for (int j = 0; j < x->n; j++) {
-                  plotu[j+sprint][0] = t;
+                 plotu[j+sprint][0] = t;
                   plotu[j+sprint][1] = VEC(x,j);
-		  plotu[j+sprint][2] = out[j].re;
+		  plotu[j+sprint][2] = out[j].re/n;
          }
       sprint+=n;
-      }
+     }
+
+   
   }
- //for (int i = 0; i < x->n; i++) {
- //   printf("i = %3d aa= %12.4g %12.4g \n",i, U[i].re ,U[i].im);
-// }
+
   end = WTime();
   t_cpu[1] = end-beg;
 
-  
+  //	          for (int j = 0; j < x->n; j++) {
+   // printf("i = %3d aa= %12.5f %12.5f \n",j, U[j].re ,U[j].im);
+    //  } 
+    //   printf("t = %f\n",t); 
+ //getchar();
   beg = WTime();
   FILE *f = fopen("Test1.asc","w");
-  for (int i = 0; i < n*nprint; i++) {
+  for (int i = 0; i < n*(nprint); i++) {
     fprintf(f, "%0.3f %0.3f %0.3f\n", plotu[i][0],plotu[i][1],plotu[i][2]);
-  }
+ }
   fclose(f);
   end = WTime();
   t_cpu[2] = end-beg;
