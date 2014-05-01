@@ -1,5 +1,7 @@
 *.o
 *.a
+*.gif
+.
 *~
 *FFTW
 *.dSYM
