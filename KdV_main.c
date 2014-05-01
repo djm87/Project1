@@ -239,7 +239,7 @@ main(int argc, char **argv)
     t_cpu[7] += end-beg2;
   } 
 //-----------------------------------------------------------------------
-// End RK4 Solver"test.asc"
+// End RK4 Solver
 
   beg = WTime();
   sprintf(str,"test.asc");
