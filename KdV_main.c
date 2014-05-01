@@ -21,8 +21,8 @@ main(int argc, char **argv)
 {
   // Run parameters 
 	//-----------------------------------
-  const int n = 256, nprint =100; //If Changed modify bash 
-  const double tmax = 0.2;
+  const int n = 128, nprint =100; //If Changed modify bash 
+  const double tmax = 1.0;
 
   // Declarations
 	//-----------------------------------
@@ -41,8 +41,9 @@ main(int argc, char **argv)
   fftw_plan plan_forward; 
   fftw_plan plan_backward;
 
-  dt = 0.1/(double)pow(n,2);
+
   dx = 20/((double)n-1);
+  dt = 0.003*pow(dx,3);//0.1/(double)pow(n,2);
   dk = 2*PI/(dx*(double)n);
   imax = round(tmax/dt);
   iplt = floor(tmax/nprint/dt);
@@ -68,8 +69,8 @@ main(int argc, char **argv)
 		//VEC(u,i) = 12*pow(4,2)*pow((1/cosh(4*(VEC(x,i)+1))),2)+
 		//	   12*pow(2,2)*pow((1/cosh(2*(VEC(x,i)-2))),2)+
 		//	   3*pow(5,2)*pow((1/cosh(0.5*5*(VEC(x,i)+3))),2); 
-		VEC(u,i) = 3*pow(3,2)*pow((1/cosh(0.5*3*VEC(x,i))),2);//+
-		//           3*pow(5,2)*pow((1/cosh(0.5*5*(VEC(x,i)+2))),2); 
+		VEC(u,i) = 3*pow(3,2)*pow((1/cosh(0.5*3*VEC(x,i))),2)+
+		           3*pow(5,2)*pow((1/cosh(0.5*5*(VEC(x,i)+2))),2); 
 		in[i].re = VEC(u,i);
 		in[i].im = 0.0;
 
@@ -238,7 +239,7 @@ main(int argc, char **argv)
     t_cpu[7] += end-beg2;
   } 
 //-----------------------------------------------------------------------
-// End RK4 Solver
+// End RK4 Solver"test.asc"
 
   beg = WTime();
   sprintf(str,"test.asc");
