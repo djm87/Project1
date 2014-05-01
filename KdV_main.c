@@ -21,8 +21,8 @@ main(int argc, char **argv)
 {
   // Run parameters 
 	//-----------------------------------
-  const int n = 512, nprint =100;
-  const double tmax = 1.0;
+  const int n = 256, nprint =100; //If Changed modify bash 
+  const double tmax = 0.2;
 
   // Declarations
 	//-----------------------------------
@@ -65,10 +65,10 @@ main(int argc, char **argv)
 		else
 		VEC(k, i) = -(n/2-1)*dk+(i-1-n/2)*dk;
 
-		VEC(u,i) = 12*pow(4,2)*pow((1/cosh(4*(VEC(x,i)+1))),2)+
-			   12*pow(2,2)*pow((1/cosh(2*(VEC(x,i)-2))),2)+
-			   3*pow(5,2)*pow((1/cosh(0.5*5*(VEC(x,i)+3))),2); 
-		//VEC(u,i) = 3*pow(3,2)*pow((1/cosh(0.5*3*VEC(x,i))),2)+
+		//VEC(u,i) = 12*pow(4,2)*pow((1/cosh(4*(VEC(x,i)+1))),2)+
+		//	   12*pow(2,2)*pow((1/cosh(2*(VEC(x,i)-2))),2)+
+		//	   3*pow(5,2)*pow((1/cosh(0.5*5*(VEC(x,i)+3))),2); 
+		VEC(u,i) = 3*pow(3,2)*pow((1/cosh(0.5*3*VEC(x,i))),2);//+
 		//           3*pow(5,2)*pow((1/cosh(0.5*5*(VEC(x,i)+2))),2); 
 		in[i].re = VEC(u,i);
 		in[i].im = 0.0;
