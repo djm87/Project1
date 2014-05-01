@@ -1,6 +1,7 @@
 *.o
 *.a
 *~
+*FFTW
 *.dSYM
 *.asc
 *.temp
@@ -32,4 +33,4 @@ config.h.in
 *.trs
 test_mid_interp
 test_trapz
-
+Anthony/*

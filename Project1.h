@@ -6,9 +6,7 @@
 #ifndef Project1_H
 #define Project1_H
 
-
-
-
+#include <fftw.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -30,13 +28,16 @@ struct vector {
 #else
 #define VEC(v, i) ((v)->vals[i])
 #endif
+struct fftw_complex  
+fftw_add(fftw_complex *a, fftw_complex *b, int n);
+fftw_complex 
+fftw_multiple(fftw_complex *a, fftw_complex *b, int n);
 
 struct vector *vector_create(int n);
 void vector_destroy(struct vector *v);
 bool vector_is_equal(struct vector *v1, struct vector *v2);
-void Interp_mid_add(struct vector *x, struct vector *y,const double interval, int N);
-double trapz(int N);
-double fnc(double x);
+
+
 // ----------------------------------------------------------------------
 // other useful stuff
 

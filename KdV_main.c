@@ -21,7 +21,7 @@ main(int argc, char **argv)
 {
   // Run parameters 
 	//-----------------------------------
-  const int n = 1024, nprint =100;
+  const int n = 512, nprint =100;
   const double tmax = 1.0;
 
   // Declarations
@@ -243,6 +243,8 @@ main(int argc, char **argv)
   sprintf(str,"test%d.asc",n);
   FILE *f = fopen(str,"w");
   for (int i = 0; i < n*(nprint); i++) {
+		if(fmod(i,n) == 0 && i>0) fprintf(f,"\n\n");
+
     fprintf(f, "%0.3f %0.3f %0.3f\n", plotu[i][0],plotu[i][1],plotu[i][2]);
   }
   fclose(f);
