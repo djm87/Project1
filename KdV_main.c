@@ -65,10 +65,11 @@ main(int argc, char **argv)
 		else
 		VEC(k, i) = -(n/2-1)*dk+(i-1-n/2)*dk;
 
-		VEC(u,i) = 12*pow(8,2)*pow((1/cosh(8*(VEC(x,i)+1))),2)+
-				 12*pow(2,2)*pow((1/cosh(2*(VEC(x,i)-2))),2);
-		//VEC(u,i) = 3*pow(a,2)*pow((1/cosh(0.5*a*VEC(x,i))),2)+
-		//           3*pow(b,2)*pow((1/cosh(0.5*b*(VEC(x,i)+2))),2); 
+		VEC(u,i) = 12*pow(4,2)*pow((1/cosh(4*(VEC(x,i)+1))),2)+
+				 12*pow(2,2)*pow((1/cosh(2*(VEC(x,i)-2))),2)+
+					3*pow(5,2)*pow((1/cosh(0.5*5*(VEC(x,i)+3))),2); 
+		//VEC(u,i) = 3*pow(3,2)*pow((1/cosh(0.5*3*VEC(x,i))),2)+
+		//           3*pow(5,2)*pow((1/cosh(0.5*5*(VEC(x,i)+2))),2); 
 		in[i].re = VEC(u,i);
 		in[i].im = 0.0;
 
@@ -240,7 +241,7 @@ main(int argc, char **argv)
 // End RK4 Solver
 
   beg = WTime();
-  sprintf(str,"test%d.asc",n);
+  sprintf(str,"test.asc");
   FILE *f = fopen(str,"w");
   for (int i = 0; i < n*(nprint); i++) {
 		if(fmod(i,n) == 0 && i>0) fprintf(f,"\n\n");
